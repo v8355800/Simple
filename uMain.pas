@@ -569,7 +569,11 @@ begin
     Grid.RowCount := Plan1.Tests.Count + 1;
     for i := 0 to Plan1.Tests.Count - 1 do
     begin
-      Grid.Cells[0, i+1] := Format('T%.3d', [Plan1.Tests[i].TestN]);
+      case Plan1.Tests[i].TestType of
+        ttRegular, ttCharacteristic: Grid.Cells[0, i+1] := Format('T%.3d', [Plan1.Tests[i].TestN]);
+        ttDifferential: Grid.Cells[0, i+1] := Format('T%.3d, %.3d', [TDifferentialTest(Plan1.Tests[i]).Test1.TestN, TDifferentialTest(Plan1.Tests[i]).Test2.TestN]);
+      end;
+
       Grid.Cells[1, i+1] := Format('%.3e', [Plan1.Tests[i].Result.fValue]);
     end;
 
@@ -768,7 +772,11 @@ begin
   for i := 0 to Plan1.Tests.Count - 1 do
   begin
 //      nxGrid.Cell[Col + 0, Row].AsInteger := i+1;
-    nxGrid.Cell[Col + 0, Row].AsString := Format('T%.3d', [Plan1.Tests[i].TestN]);
+    case Plan1.Tests[i].TestType of
+      ttRegular, ttCharacteristic : nxGrid.Cell[Col + 0, Row].AsString := Format('T%.3d', [Plan1.Tests[i].TestN]);
+      ttDifferential              : nxGrid.Cell[Col + 0, Row].AsString := Format('T%.3d, %.3d', [TDifferentialTest(Plan1.Tests[i]).Test1.TestN, TDifferentialTest(Plan1.Tests[i]).Test2.TestN]);
+    end;
+
     nxGrid.Cell[Col + 1, Row].AsFloat := Plan1.Tests[i].Result.fValue; //Format('T%.3d', [Plan1.Tests[i].TestN]);
     if ((i+1) mod edtColNumber.AsInteger) = 0 then
     begin
